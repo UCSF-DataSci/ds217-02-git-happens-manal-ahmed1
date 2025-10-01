@@ -1,8 +1,8 @@
-#!/bin/bash
-
-echo "startingo off!"
+#! /bin/sh
 
 mkdir -p src data output
+
+
 
 cat > .gitignore << 'EOF'
 # Python
@@ -13,6 +13,7 @@ __pycache__/
 # OS files
 .DS_Store
 EOF
+
 echo "✓ Created .gitignore"
 
 cat > data/students.csv << 'EOF'
@@ -26,6 +27,7 @@ Frank,21,76,Science
 Grace,19,91,Math
 Henry,22,82,Science
 EOF
+
 echo "✓ Created data/students.csv with 8 records"
 
 cat > src/data_analysis.py << 'EOF'
