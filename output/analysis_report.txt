@@ -1,0 +1,9 @@
+Advanced Student Analysis Report
+==================================================
+
+Total Students: 8
+Average Grade: 85.9
+Highest: 95 | Lowest: 76
+
+Subject Distribution:
+  Math: 4\n  Science: 4\n\nGrade Distribution:\n  A: 3 students (37.5%)\n  B: 3 students (37.5%)\n  C: 2 students (25.0%)\n  D: 0 students (0.0%)\n  F: 0 students (0.0%)\n
