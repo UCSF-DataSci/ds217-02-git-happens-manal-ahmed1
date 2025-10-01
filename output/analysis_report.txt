@@ -1,0 +1,9 @@
+Student Analysis Report
+========================================
+
+Total Students: 8
+Average Grade: 85.9
+
+Subject Distribution:
+  Math: 4
+  Science: 4
