@@ -1,3 +1,36 @@
+#! /bin/sh
+
+mkdir -p src data output
+
+
+
+cat > .gitignore << 'EOF'
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS files
+.DS_Store
+EOF
+
+echo "✓ Created .gitignore"
+
+cat > data/students.csv << 'EOF'
+name,age,grade,subject
+Alice,20,92,Math
+Bob,21,85,Science
+Charlie,19,78,Math
+Diana,22,95,Science
+Eve,20,88,Math
+Frank,21,76,Science
+Grace,19,91,Math
+Henry,22,82,Science
+EOF
+
+echo "✓ Created data/students.csv with 8 records"
+
+cat > src/data_analysis.py << 'EOF'
 """Basic student data analysis script."""
 
 
@@ -33,3 +66,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+EOF
+echo "✓ Created src/data_analysis.py with function stubs"
+
+
+cat > src/data_analysis_function.py << 'EOF'
+
+EOF
