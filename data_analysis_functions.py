@@ -1,55 +1,115 @@
-# data_analysis_functions.py (advanced analysis script)
+import os
 
+def load_data(filename):
+    """Generic loader that checks file extension."""
+    if filename.endswith('.csv'):
+        return load_csv(filename)
+    else:
+        raise ValueError(f"Unsupported file type: {filename}")
 
-# make grade distribution with percentages
-def analyze_grade_distribution(grades, total):
-    dist = {"A": 0, "B": 0, "C": 0, "D": 0, "F": 0}
-    for g in grades:
-        if g >= 90:
-            dist["A"] += 1
-        elif g >= 80:
-            dist["B"] += 1
-        elif g >= 70:
-            dist["C"] += 1
-        elif g >= 60:
-            dist["D"] += 1
-        else:
-            dist["F"] += 1
+def load_csv(filename):
+    """Load CSV data using manual parsing."""
+    with open(filename, 'r') as f:
+        lines = f.readlines()
+
+    students = []
+    for line in lines[1:]:  # Skip header
+        line = line.strip()
+        if line:
+            name, age, grade, subject = line.split(',')
+            students.append({
+                'name': name,
+                'age': int(age),
+                'grade': int(grade),
+                'subject': subject
+            })
+
+    return students
+def count_by_subject(students):
+    """Count students by all subjects."""
+    subjects = {}
+    for student in students:
+        subject = student['subject']
+        subjects[subject] = subjects.get(subject, 0) + 1
+    return subjects
+def analyze_data(students):
+    """Perform comprehensive analysis on student data."""
+    grades = [s['grade'] for s in students]
 
     return {
-        grade: f"{count} ({(count / total) * 100:.1f}%)"
-        for grade, count in dist.items()
+        'total_students': len(students),
+        'average_grade': sum(grades) / len(grades),
+        'highest_grade': max(grades),
+        'lowest_grade': min(grades),
+        'subjects': count_by_subject(students),
+        'distribution': analyze_grade_distribution(grades)
+    }
+def analyze_grade_distribution(grades):
+    """Analyze grade distribution by letter grade."""
+    total = len(grades)
+    counts = {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'F': 0}
+
+    for grade in grades:
+        if grade >= 90:
+            counts['A'] += 1
+        elif grade >= 80:
+            counts['B'] += 1
+        elif grade >= 70:
+            counts['C'] += 1
+        elif grade >= 60:
+            counts['D'] += 1
+        else:
+            counts['F'] += 1
+
+    percentages = {
+        letter: (count / total * 100)
+        for letter, count in counts.items()
     }
 
+    return {'counts': counts, 'percentages': percentages}
 
-# save advanced report to output file
-def save_results(results, filename="output/analysis_report.txt"):
+def save_results(results, filename):
+    """Save analysis results to file."""
+    report = f"""Advanced Student Analysis Report
+{'=' * 50}
+
+Total Students: {results['total_students']}
+Average Grade: {results['average_grade']:.1f}
+Highest: {results['highest_grade']} | Lowest: {results['lowest_grade']}
+
+Subject Distribution:
+"""
+
+    for subject, count in results['subjects'].items():
+        report += f"  {subject}: {count}\\n"
+
+    report += "\\nGrade Distribution:\\n"
+
+    for letter in ['A', 'B', 'C', 'D', 'F']:
+        count = results['distribution']['counts'][letter]
+        pct = results['distribution']['percentages'][letter]
+        report += f"  {letter}: {count} students ({pct:.1f}%)\\n"
+
     os.makedirs(os.path.dirname(filename), exist_ok=True)
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write("Analysis Report (Advanced)\n")
+    with open(filename, 'w') as f:
+        f.write(report)
 
-        f.write(f"Total Students: {results['total']}\n")
-        f.write(f"Average Grade: {results['average']:.1f}\n")
-        f.write(f"Highest Grade: {results['highest']}\n")
-        f.write(f"Lowest Grade: {results['lowest']}\n\n")
-
-        f.write("Students by Subject:\n")
-        for subject, count in results["subjects"].items():
-            f.write(f"- {subject}: {count}\n")
-
-        f.write("\nGrade Distribution:\n")
-        for grade, value in results["distribution"].items():
-            f.write(f"- {grade}: {value}\n")
-
-    print(f"report saved to {filename}")
-
-
-# main workflow
 def main():
-    students = load_data()
-    results = analyze_data(students)
-    save_results(results)
+    """Main execution function."""
+    # Load data using modular functions
+    students = load_data('data/students.csv')
 
+    # Perform analysis
+    results = analyze_data(students)
+
+    # Save results
+    save_results(results, 'output/analysis_report.txt')
+
+    # Also print to console
+    with open('output/analysis_report.txt', 'r') as f:
+        print(f.read())
 
 if __name__ == "__main__":
     main()
+
+
